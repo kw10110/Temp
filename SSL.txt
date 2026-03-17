@@ -1,0 +1,23 @@
+$target = "example.com"
+$port = 443
+
+$client = New-Object System.Net.Sockets.TcpClient($target, $port)
+$sslStream = New-Object System.Net.Security.SslStream(
+    $client.GetStream(),
+    $false,
+    ({ $true })
+)
+
+try {
+    $sslStream.AuthenticateAsClient(
+        $target,
+        $null,
+        [System.Security.Authentication.SslProtocols]::Tls12,
+        $false
+    )
+    "TLS 1.2 supported"
+} catch {
+    "TLS 1.2 NOT supported"
+}
+
+$client.Close()
